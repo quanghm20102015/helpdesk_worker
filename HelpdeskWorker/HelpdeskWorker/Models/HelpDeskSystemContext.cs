@@ -17,6 +17,8 @@ public partial class HelpDeskSystemContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
+    public virtual DbSet<Company> Companys { get; set; }
+
     public virtual DbSet<ConfigMail> ConfigMails { get; set; }
 
     public virtual DbSet<Contact> Contacts { get; set; }
@@ -36,14 +38,22 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Company).HasColumnName("company");
             entity.Property(e => e.Fullname).HasColumnName("fullname");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.Password).HasColumnName("password");
             entity.Property(e => e.Workemail).HasColumnName("workemail");
+        });
+
+        modelBuilder.Entity<Company>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CompanyName).HasColumnName("companyName");
         });
 
         modelBuilder.Entity<ConfigMail>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.Incoming).HasColumnName("incoming");
             entity.Property(e => e.IncomingPort).HasColumnName("incomingPort");
             entity.Property(e => e.Outgoing).HasColumnName("outgoing");
@@ -63,6 +73,7 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.Facebook).HasColumnName("facebook");
             entity.Property(e => e.Fullname).HasColumnName("fullname");
             entity.Property(e => e.Github).HasColumnName("github");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.Linkedin).HasColumnName("linkedin");
             entity.Property(e => e.PhoneNumber).HasColumnName("phoneNumber");
             entity.Property(e => e.Twitter).HasColumnName("twitter");
@@ -83,9 +94,7 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.From).HasColumnName("from");
             entity.Property(e => e.FromName).HasColumnName("fromName");
             entity.Property(e => e.IdConfigEmail).HasColumnName("idConfigEmail");
-            entity.Property(e => e.MessageId)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("messageId");
+            entity.Property(e => e.MessageId).HasColumnName("messageId");
             entity.Property(e => e.Subject).HasColumnName("subject");
             entity.Property(e => e.TextBody).HasColumnName("textBody");
             entity.Property(e => e.To).HasColumnName("to");

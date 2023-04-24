@@ -28,4 +28,6 @@ public partial class Contact
     public string? Linkedin { get; set; }
 
     public string? Github { get; set; }
+
+    public int IdCompany { get; set; }
 }

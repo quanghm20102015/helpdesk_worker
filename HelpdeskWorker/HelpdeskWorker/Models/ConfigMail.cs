@@ -20,4 +20,6 @@ public partial class ConfigMail
     public string? Outgoing { get; set; }
 
     public int? OutgoingPort { get; set; }
+
+    public int IdCompany { get; set; }
 }

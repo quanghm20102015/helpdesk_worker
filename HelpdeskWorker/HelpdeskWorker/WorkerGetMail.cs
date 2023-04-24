@@ -87,7 +87,7 @@ namespace HelpdeskWorker
                         emailInfo.Cc = message.Cc.ToString();
                         emailInfo.Bcc = message.Bcc.ToString();
                         emailInfo.Subject = message.Subject.ToString();
-                        emailInfo.TextBody = message.TextBody.ToString();
+                        emailInfo.TextBody = message.HtmlBody.ToString();
 
                         dbEmailInfo.Insert(emailInfo);
 

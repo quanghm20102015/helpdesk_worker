@@ -14,4 +14,6 @@ public partial class Account
     public string? Workemail { get; set; }
 
     public string? Password { get; set; }
+
+    public int IdCompany { get; set; }
 }
