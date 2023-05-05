@@ -26,4 +26,12 @@ public partial class EmailInfo
     public string? Subject { get; set; }
 
     public string? TextBody { get; set; }
+
+    public int? Assign { get; set; }
+
+    public int? Status { get; set; }
+
+    public int? IdCompany { get; set; }
+
+    public int? IdLabel { get; set; }
 }

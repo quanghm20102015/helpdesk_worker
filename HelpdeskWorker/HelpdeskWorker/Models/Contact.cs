@@ -30,4 +30,6 @@ public partial class Contact
     public string? Github { get; set; }
 
     public int IdCompany { get; set; }
+
+    public int? IdLabel { get; set; }
 }

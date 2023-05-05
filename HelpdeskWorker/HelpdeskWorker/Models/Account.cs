@@ -16,4 +16,10 @@ public partial class Account
     public string? Password { get; set; }
 
     public int IdCompany { get; set; }
+
+    public bool Confirm { get; set; }
+
+    public bool Login { get; set; }
+
+    public int Status { get; set; }
 }
