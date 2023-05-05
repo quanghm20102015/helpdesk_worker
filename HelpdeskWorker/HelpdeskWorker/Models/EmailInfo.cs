@@ -34,4 +34,6 @@ public partial class EmailInfo
     public int? IdCompany { get; set; }
 
     public int? IdLabel { get; set; }
+
+    public string? IdGuId { get; set; }
 }

@@ -52,6 +52,7 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.Confirm).HasColumnName("confirm");
             entity.Property(e => e.Fullname).HasColumnName("fullname");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdGuId).HasColumnName("idGuId");
             entity.Property(e => e.Login).HasColumnName("login");
             entity.Property(e => e.Password).HasColumnName("password");
             entity.Property(e => e.Status)
@@ -130,6 +131,7 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.FromName).HasColumnName("fromName");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdConfigEmail).HasColumnName("idConfigEmail");
+            entity.Property(e => e.IdGuId).HasColumnName("idGuId");
             entity.Property(e => e.IdLabel).HasColumnName("idLabel");
             entity.Property(e => e.MessageId).HasColumnName("messageId");
             entity.Property(e => e.Status).HasColumnName("status");

@@ -22,4 +22,6 @@ public partial class Account
     public bool Login { get; set; }
 
     public int Status { get; set; }
+
+    public string? IdGuId { get; set; }
 }
