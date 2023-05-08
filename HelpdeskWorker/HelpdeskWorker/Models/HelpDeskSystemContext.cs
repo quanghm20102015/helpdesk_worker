@@ -31,6 +31,8 @@ public partial class HelpDeskSystemContext : DbContext
 
     public virtual DbSet<EmailInfo> EmailInfos { get; set; }
 
+    public virtual DbSet<EmailInfoLabel> EmailInfoLabels { get; set; }
+
     public virtual DbSet<Label> Labels { get; set; }
 
     public virtual DbSet<Status> Statuses { get; set; }
@@ -116,8 +118,10 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.DescriptionFeedBack).HasColumnName("descriptionFeedBack");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
-            entity.Property(e => e.IdEmailInfo).HasColumnName("idEmailInfo");
             entity.Property(e => e.IdFeedBack).HasColumnName("idFeedBack");
+            entity.Property(e => e.IdGuIdEmailInfo)
+                .HasDefaultValueSql("''::text")
+                .HasColumnName("idGuIdEmailInfo");
         });
 
         modelBuilder.Entity<EmailInfo>(entity =>
@@ -138,6 +142,14 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.Subject).HasColumnName("subject");
             entity.Property(e => e.TextBody).HasColumnName("textBody");
             entity.Property(e => e.To).HasColumnName("to");
+            entity.Property(e => e.Type).HasColumnName("type");
+        });
+
+        modelBuilder.Entity<EmailInfoLabel>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdEmailInfo).HasColumnName("idEmailInfo");
+            entity.Property(e => e.IdLabel).HasColumnName("idLabel");
         });
 
         modelBuilder.Entity<Label>(entity =>

@@ -36,4 +36,6 @@ public partial class EmailInfo
     public int? IdLabel { get; set; }
 
     public string? IdGuId { get; set; }
+
+    public int Type { get; set; }
 }

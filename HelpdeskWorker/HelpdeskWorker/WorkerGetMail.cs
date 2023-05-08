@@ -110,6 +110,7 @@ namespace HelpdeskWorker
                                 emailInfo.Status = 1;
                                 emailInfo.Assign = listAccountOnline[assignIndex].Id;
                                 emailInfo.IdGuId = Guid.NewGuid().ToString();
+                                emailInfo.Type = 1;
                                 k++;
                                 dbEmailInfo.Insert(emailInfo);
 

@@ -13,5 +13,5 @@ public partial class Csat
 
     public int IdCompany { get; set; }
 
-    public int IdEmailInfo { get; set; }
+    public string IdGuIdEmailInfo { get; set; } = null!;
 }
