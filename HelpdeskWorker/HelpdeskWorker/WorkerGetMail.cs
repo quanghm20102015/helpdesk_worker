@@ -120,10 +120,11 @@ namespace HelpdeskWorker
                                     Contact contact = dbContact.GetByEmail(emailInfo.From);
                                     if (contact == null)
                                     {
-                                        contact.Fullname = emailInfo.FromName;
-                                        contact.Email = emailInfo.From;
-                                        contact.IdCompany = emailInfo.IdCompany.Value;
-                                        dbContact.Insert(contact);
+                                        Contact contactInsert = new Contact();
+                                        contactInsert.Fullname = emailInfo.FromName;
+                                        contactInsert.Email = emailInfo.From;
+                                        contactInsert.IdCompany = emailInfo.IdCompany.Value;
+                                        dbContact.Insert(contactInsert);
                                     }
                                 }
                                 catch (Exception ex)
