@@ -5,6 +5,8 @@ using HelpdeskWorker.Data;
 using HelpdeskWorker.Models;
 using MailKit.Search;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Math.Field;
 
 namespace HelpdeskWorker
 {
@@ -14,7 +16,8 @@ namespace HelpdeskWorker
         DBHelper db = new DBHelper();
         EmailInfoHelper dbEmailInfo = new EmailInfoHelper();
         AccountHelper dbAccountInfo = new AccountHelper();
-
+        ContactHelper dbContact = new ContactHelper();
+        
         public WorkerGetMail(ILogger<WorkerGetMail> logger)
         {
             _logger = logger;
@@ -94,7 +97,7 @@ namespace HelpdeskWorker
                                 assignIndex = listAccount.Count == 0 ? 0 : k % listAccount.Count;
                                 EmailInfo emailInfo = new EmailInfo();
 
-                                var message = client.Inbox.GetMessage(uniqueId);
+                                var message = client.Inbox.GetMessage(uniqueId);                                
 
                                 emailInfo.IdConfigEmail = IdConfigEmail;
                                 emailInfo.MessageId = message.MessageId.ToString();
@@ -111,6 +114,22 @@ namespace HelpdeskWorker
                                 emailInfo.Assign = listAccountOnline[assignIndex].Id;
                                 emailInfo.IdGuId = Guid.NewGuid().ToString();
                                 emailInfo.Type = 1;
+
+                                try
+                                {
+                                    Contact contact = dbContact.GetByEmail(emailInfo.From);
+                                    if (contact == null)
+                                    {
+                                        contact.Fullname = emailInfo.FromName;
+                                        contact.Email = emailInfo.From;
+                                        contact.IdCompany = emailInfo.IdCompany.Value;
+                                        dbContact.Insert(contact);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                }
+
                                 k++;
                                 dbEmailInfo.Insert(emailInfo);
 

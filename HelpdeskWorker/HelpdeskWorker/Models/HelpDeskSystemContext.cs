@@ -25,13 +25,21 @@ public partial class HelpDeskSystemContext : DbContext
 
     public virtual DbSet<ContactLabel> ContactLabels { get; set; }
 
+    public virtual DbSet<ContactNote> ContactNotes { get; set; }
+
     public virtual DbSet<Country> Countrys { get; set; }
 
     public virtual DbSet<Csat> Csats { get; set; }
 
     public virtual DbSet<EmailInfo> EmailInfos { get; set; }
 
+    public virtual DbSet<EmailInfoAssign> EmailInfoAssigns { get; set; }
+
+    public virtual DbSet<EmailInfoFollow> EmailInfoFollows { get; set; }
+
     public virtual DbSet<EmailInfoLabel> EmailInfoLabels { get; set; }
+
+    public virtual DbSet<History> Historys { get; set; }
 
     public virtual DbSet<Label> Labels { get; set; }
 
@@ -107,6 +115,13 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.IdLabel).HasColumnName("idLabel");
         });
 
+        modelBuilder.Entity<ContactNote>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdContact).HasColumnName("idContact");
+            entity.Property(e => e.Note).HasColumnName("note");
+        });
+
         modelBuilder.Entity<Country>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
@@ -145,11 +160,36 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.Type).HasColumnName("type");
         });
 
+        modelBuilder.Entity<EmailInfoAssign>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdEmailInfo).HasColumnName("idEmailInfo");
+            entity.Property(e => e.IdUser).HasColumnName("idUser");
+        });
+
+        modelBuilder.Entity<EmailInfoFollow>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdEmailInfo).HasColumnName("idEmailInfo");
+            entity.Property(e => e.IdUser).HasColumnName("idUser");
+        });
+
         modelBuilder.Entity<EmailInfoLabel>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdEmailInfo).HasColumnName("idEmailInfo");
             entity.Property(e => e.IdLabel).HasColumnName("idLabel");
+        });
+
+        modelBuilder.Entity<History>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Content).HasColumnName("content");
+            entity.Property(e => e.FullName).HasColumnName("fullName");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdDetail).HasColumnName("idDetail");
+            entity.Property(e => e.Time).HasColumnName("time");
+            entity.Property(e => e.Type).HasColumnName("type");
         });
 
         modelBuilder.Entity<Label>(entity =>
