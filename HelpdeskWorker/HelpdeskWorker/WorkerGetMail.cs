@@ -7,6 +7,7 @@ using MailKit.Search;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Math.Field;
+using Microsoft.Extensions.Logging;
 
 namespace HelpdeskWorker
 {
@@ -31,115 +32,122 @@ namespace HelpdeskWorker
 
                 foreach (ConfigMail mail in listMail)
                 {
-                    string Email = "";
-                    string YourName = "";
-                    string Password = "";
-                    string Incoming = "";
-                    int IncomingPort = 0;
-                    string Outgoing = "";
-                    int OutgoingPort = 0;
-                    int IdConfigEmail = 0;
-                    using (var client = new ImapClient())
+                    try
                     {
-                        if (listMail.Count != 0)
+                        string Email = "";
+                        string YourName = "";
+                        string Password = "";
+                        string Incoming = "";
+                        int IncomingPort = 0;
+                        string Outgoing = "";
+                        int OutgoingPort = 0;
+                        int IdConfigEmail = 0;
+                        using (var client = new ImapClient())
                         {
-                            IdConfigEmail = mail.Id;
-                            Email = mail.Email;
-                            YourName = mail.YourName;
-                            Password = mail.Password;
-                            Incoming = mail.Incoming;
-                            IncomingPort = mail.IncomingPort.Value;
-                            Outgoing = mail.Outgoing;
-                            OutgoingPort = mail.OutgoingPort.Value;
-                        }
-                        else
-                        {
-                            var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json");
-                            var config = configuration.Build();
-                            Email = config["MailSettings:Mail"];
-                            YourName = config["MailSettings:DisplayName"];
-                            Password = config["MailSettings:Password"];
-                            Incoming = config["MailSettings:Incoming"];
-                            IncomingPort = int.Parse(config["MailSettings:IncomingPort"]);
-                            Outgoing = config["MailSettings:Outgoing"];
-                            OutgoingPort = int.Parse(config["MailSettings:OutgoingPort"]);
-                        }
-
-                        client.Connect(Incoming, IncomingPort, true);
-
-                        client.Authenticate(Email, Password);
-
-                        var inbox = client.Inbox;
-                        inbox.Open(FolderAccess.ReadWrite);
-
-                        var results = inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
-
-                        if(results.UniqueIds.Count != 0)
-                        {
-                            List<Account> listAccountAll = dbAccountInfo.GetByIdCompany(mail.IdCompany);
-
-                            List<Account> listAccountOnline = listAccountAll.FindAll(r => r.Login == true);
-
-                            List<Account> listAccount = new List<Account>();
-                            if (listAccountOnline.Count == 0)
+                            if (listMail.Count != 0)
                             {
-                                listAccount = listAccountAll;
+                                IdConfigEmail = mail.Id;
+                                Email = mail.Email;
+                                YourName = mail.YourName;
+                                Password = mail.Password;
+                                Incoming = mail.Incoming;
+                                IncomingPort = mail.IncomingPort.Value;
+                                Outgoing = mail.Outgoing;
+                                OutgoingPort = mail.OutgoingPort.Value;
                             }
                             else
                             {
-                                listAccount = listAccountOnline;
+                                var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json");
+                                var config = configuration.Build();
+                                Email = config["MailSettings:Mail"];
+                                YourName = config["MailSettings:DisplayName"];
+                                Password = config["MailSettings:Password"];
+                                Incoming = config["MailSettings:Incoming"];
+                                IncomingPort = int.Parse(config["MailSettings:IncomingPort"]);
+                                Outgoing = config["MailSettings:Outgoing"];
+                                OutgoingPort = int.Parse(config["MailSettings:OutgoingPort"]);
                             }
 
-                            int k = 0;
-                            int assignIndex = 0;
-                            foreach (var uniqueId in results.UniqueIds)
+                            client.Connect(Incoming, IncomingPort, true);
+
+                            client.Authenticate(Email, Password);
+
+                            var inbox = client.Inbox;
+                            inbox.Open(FolderAccess.ReadWrite);
+
+                            var results = inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
+
+                            if (results.UniqueIds.Count != 0)
                             {
-                                assignIndex = listAccount.Count == 0 ? 0 : k % listAccount.Count;
-                                EmailInfo emailInfo = new EmailInfo();
+                                List<Account> listAccountAll = dbAccountInfo.GetByIdCompany(mail.IdCompany);
 
-                                var message = client.Inbox.GetMessage(uniqueId);                                
+                                List<Account> listAccountOnline = listAccountAll.FindAll(r => r.Login == true);
 
-                                emailInfo.IdConfigEmail = IdConfigEmail;
-                                emailInfo.MessageId = message.MessageId.ToString();
-                                emailInfo.Date = message.Date.DateTime.ToUniversalTime();
-                                emailInfo.From = message.From.ToString().Split('<')[1].Replace(">", "");
-                                emailInfo.FromName = message.From.ToString().Split('<')[0];
-                                emailInfo.To = message.To.ToString();
-                                emailInfo.Cc = message.Cc.ToString();
-                                emailInfo.Bcc = message.Bcc.ToString();
-                                emailInfo.Subject = message.Subject.ToString();
-                                emailInfo.TextBody = message.HtmlBody.ToString();
-                                emailInfo.IdCompany = mail.IdCompany;
-                                emailInfo.Status = 1;
-                                emailInfo.Assign = listAccountOnline[assignIndex].Id;
-                                emailInfo.IdGuId = Guid.NewGuid().ToString();
-                                emailInfo.Type = 1;
-
-                                try
+                                List<Account> listAccount = new List<Account>();
+                                if (listAccountOnline.Count == 0)
                                 {
-                                    Contact contact = dbContact.GetByEmail(emailInfo.From);
-                                    if (contact == null)
+                                    listAccount = listAccountAll;
+                                }
+                                else
+                                {
+                                    listAccount = listAccountOnline;
+                                }
+
+                                int k = 0;
+                                int assignIndex = 0;
+                                foreach (var uniqueId in results.UniqueIds)
+                                {
+                                    assignIndex = listAccount.Count == 0 ? 0 : k % listAccount.Count;
+                                    EmailInfo emailInfo = new EmailInfo();
+
+                                    var message = client.Inbox.GetMessage(uniqueId);
+
+                                    emailInfo.IdConfigEmail = IdConfigEmail;
+                                    emailInfo.MessageId = message.MessageId.ToString();
+                                    emailInfo.Date = message.Date.DateTime.ToUniversalTime();
+                                    emailInfo.From = message.From.ToString().Split('<')[1].Replace(">", "");
+                                    emailInfo.FromName = message.From.ToString().Split('<')[0];
+                                    emailInfo.To = message.To.ToString();
+                                    emailInfo.Cc = message.Cc.ToString();
+                                    emailInfo.Bcc = message.Bcc.ToString();
+                                    emailInfo.Subject = message.Subject.ToString();
+                                    emailInfo.TextBody = message.HtmlBody.ToString();
+                                    emailInfo.IdCompany = mail.IdCompany;
+                                    emailInfo.Status = 1;
+                                    emailInfo.Assign = listAccountOnline[assignIndex].Id;
+                                    emailInfo.IdGuId = Guid.NewGuid().ToString();
+                                    emailInfo.Type = 1;
+
+                                    try
                                     {
-                                        Contact contactInsert = new Contact();
-                                        contactInsert.Fullname = emailInfo.FromName;
-                                        contactInsert.Email = emailInfo.From;
-                                        contactInsert.IdCompany = emailInfo.IdCompany.Value;
-                                        dbContact.Insert(contactInsert);
+                                        Contact contact = dbContact.GetByEmail(emailInfo.From);
+                                        if (contact == null)
+                                        {
+                                            Contact contactInsert = new Contact();
+                                            contactInsert.Fullname = emailInfo.FromName;
+                                            contactInsert.Email = emailInfo.From;
+                                            contactInsert.IdCompany = emailInfo.IdCompany.Value;
+                                            dbContact.Insert(contactInsert);
+                                        }
                                     }
-                                }
-                                catch (Exception ex)
-                                {
+                                    catch (Exception ex)
+                                    {
+                                    }
+
+                                    k++;
+                                    dbEmailInfo.Insert(emailInfo);
+
+                                    inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
                                 }
 
-                                k++;
-                                dbEmailInfo.Insert(emailInfo);
-
-                                inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
                             }
 
-                        }  
-
-                        client.Disconnect(true);
+                            client.Disconnect(true);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.ToString());
                     }
                 }
 
