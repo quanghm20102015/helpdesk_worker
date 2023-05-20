@@ -115,7 +115,9 @@ namespace HelpdeskWorker
 
                                     emailInfo.IdConfigEmail = IdConfigEmail;
                                     emailInfo.MessageId = message.MessageId.ToString();
-                                    emailInfo.Date = message.Date.DateTime.ToUniversalTime();
+                                    
+                                    //emailInfo.Date = message.Date.LocalDateTime.ToUniversalTime();
+                                    emailInfo.Date = DateTime.Now.ToUniversalTime();
                                     emailInfo.From = message.From.ToString().Split('<')[1].Replace(">", "");
                                     emailInfo.FromName = message.From.ToString().Split('<')[0].Replace("\"", "");
                                     emailInfo.To = message.To.ToString();
