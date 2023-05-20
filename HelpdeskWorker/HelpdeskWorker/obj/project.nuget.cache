@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "zBBgqVAJkuJdSrogrmuvMqf8q2qfj3kGdkOe4HoYNSifeFui7aDM3MgfugTYR6asYS5BNhVbOfVawO+5ROu4rg==",
+  "dgSpecHash": "f2Bco9PN7Phm7xNUh7DHVDEeBVfv8l9o8tQaCdBhHpJAWd0zIuMttMcg519Pn5ZssLUVxkerp3VOFP85/+JsgA==",
   "success": true,
   "projectFilePath": "C:\\Users\\quang\\Documents\\Visual Studio 2022\\Project\\HelpDesk\\Worker\\helpdesk_worker\\HelpdeskWorker\\HelpdeskWorker\\HelpdeskWorker.csproj",
   "expectedPackageFiles": [
@@ -43,6 +43,7 @@
     "C:\\Users\\quang\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
     "C:\\Users\\quang\\.nuget\\packages\\mimekit\\4.0.0\\mimekit.4.0.0.nupkg.sha512",
     "C:\\Users\\quang\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\quang\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\quang\\.nuget\\packages\\npgsql\\7.0.2\\npgsql.7.0.2.nupkg.sha512",
     "C:\\Users\\quang\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\7.0.3\\npgsql.entityframeworkcore.postgresql.7.0.3.nupkg.sha512",
     "C:\\Users\\quang\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",

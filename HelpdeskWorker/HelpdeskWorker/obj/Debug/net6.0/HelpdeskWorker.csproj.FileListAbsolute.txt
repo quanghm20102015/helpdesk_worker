@@ -130,3 +130,4 @@ D:\project\HelpDeskSystem\helpdesk_worker\HelpdeskWorker\HelpdeskWorker\obj\Debu
 D:\project\HelpDeskSystem\helpdesk_worker\HelpdeskWorker\HelpdeskWorker\obj\Debug\net6.0\HelpdeskWorker.pdb
 D:\project\HelpDeskSystem\helpdesk_worker\HelpdeskWorker\HelpdeskWorker\obj\Debug\net6.0\HelpdeskWorker.genruntimeconfig.cache
 D:\project\HelpDeskSystem\helpdesk_worker\HelpdeskWorker\HelpdeskWorker\obj\Debug\net6.0\ref\HelpdeskWorker.dll
+C:\Users\quang\Documents\Visual Studio 2022\Project\HelpDesk\Worker\helpdesk_worker\HelpdeskWorker\HelpdeskWorker\bin\Debug\net6.0\Newtonsoft.Json.dll

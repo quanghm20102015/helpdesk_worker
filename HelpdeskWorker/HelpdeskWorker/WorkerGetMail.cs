@@ -8,6 +8,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Math.Field;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System.Collections.Immutable;
 
 namespace HelpdeskWorker
 {
@@ -101,12 +103,21 @@ namespace HelpdeskWorker
                                     EmailInfo emailInfo = new EmailInfo();
 
                                     var message = client.Inbox.GetMessage(uniqueId);
+                                    try
+                                    {
+                                        //_logger.LogInformation(Newtonsoft.Json.JsonConvert.SerializeObject(message));
+                                        string output = JsonConvert.SerializeObject(message);
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                    }
 
                                     emailInfo.IdConfigEmail = IdConfigEmail;
                                     emailInfo.MessageId = message.MessageId.ToString();
                                     emailInfo.Date = message.Date.DateTime.ToUniversalTime();
                                     emailInfo.From = message.From.ToString().Split('<')[1].Replace(">", "");
-                                    emailInfo.FromName = message.From.ToString().Split('<')[0];
+                                    emailInfo.FromName = message.From.ToString().Split('<')[0].Replace("\"", "");
                                     emailInfo.To = message.To.ToString();
                                     emailInfo.Cc = message.Cc.ToString();
                                     emailInfo.Bcc = message.Bcc.ToString();
@@ -117,6 +128,17 @@ namespace HelpdeskWorker
                                     emailInfo.Assign = listAccountOnline[assignIndex].Id;
                                     emailInfo.IdGuId = Guid.NewGuid().ToString();
                                     emailInfo.Type = 1;
+                                    emailInfo.Read = false;
+                                    if (message.References.Count == 0)
+                                    {
+                                        emailInfo.MainConversation = true;
+                                        emailInfo.IdReference = message.MessageId.ToString();
+                                    }
+                                    else
+                                    {
+                                        emailInfo.MainConversation = false;
+                                        emailInfo.IdReference = message.References.ToArray()[0].ToString();
+                                    }
 
                                     try
                                     {

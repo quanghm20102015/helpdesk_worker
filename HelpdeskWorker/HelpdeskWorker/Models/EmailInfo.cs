@@ -38,4 +38,18 @@ public partial class EmailInfo
     public string? IdGuId { get; set; }
 
     public int Type { get; set; }
+
+    public DateTime? DateDelete { get; set; }
+
+    public int IdUserDelete { get; set; }
+
+    public bool IsDelete { get; set; }
+
+    public bool IsAssign { get; set; }
+
+    public bool MainConversation { get; set; }
+
+    public bool Read { get; set; }
+
+    public string IdReference { get; set; } = null!;
 }

@@ -146,13 +146,22 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.Bcc).HasColumnName("bcc");
             entity.Property(e => e.Cc).HasColumnName("cc");
             entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.DateDelete).HasColumnName("dateDelete");
             entity.Property(e => e.From).HasColumnName("from");
             entity.Property(e => e.FromName).HasColumnName("fromName");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdConfigEmail).HasColumnName("idConfigEmail");
             entity.Property(e => e.IdGuId).HasColumnName("idGuId");
             entity.Property(e => e.IdLabel).HasColumnName("idLabel");
+            entity.Property(e => e.IdReference)
+                .HasDefaultValueSql("''::text")
+                .HasColumnName("idReference");
+            entity.Property(e => e.IdUserDelete).HasColumnName("idUserDelete");
+            entity.Property(e => e.IsAssign).HasColumnName("isAssign");
+            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            entity.Property(e => e.MainConversation).HasColumnName("mainConversation");
             entity.Property(e => e.MessageId).HasColumnName("messageId");
+            entity.Property(e => e.Read).HasColumnName("read");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.Subject).HasColumnName("subject");
             entity.Property(e => e.TextBody).HasColumnName("textBody");
@@ -206,6 +215,7 @@ public partial class HelpDeskSystemContext : DbContext
             entity.ToTable("Status");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Sort).HasColumnName("sort");
             entity.Property(e => e.StatusName).HasColumnName("statusName");
         });
 
