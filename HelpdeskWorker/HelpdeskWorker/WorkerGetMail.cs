@@ -10,6 +10,7 @@ using Org.BouncyCastle.Math.Field;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
+using MimeKit;
 
 namespace HelpdeskWorker
 {
@@ -142,9 +143,10 @@ namespace HelpdeskWorker
                                         emailInfo.IdReference = message.References.ToArray()[0].ToString();
                                     }
 
+                                    int idContact = 0;
                                     try
                                     {
-                                        Contact contact = dbContact.GetByEmail(emailInfo.From);
+                                        Contact contact = dbContact.GetByEmail(emailInfo.From, emailInfo.IdCompany.Value);
                                         if (contact == null)
                                         {
                                             Contact contactInsert = new Contact();
@@ -152,6 +154,11 @@ namespace HelpdeskWorker
                                             contactInsert.Email = emailInfo.From;
                                             contactInsert.IdCompany = emailInfo.IdCompany.Value;
                                             dbContact.Insert(contactInsert);
+                                            idContact = contactInsert.Id;
+                                        }
+                                        else 
+                                        {
+                                            idContact = contact.Id;
                                         }
                                     }
                                     catch (Exception ex)
@@ -159,7 +166,27 @@ namespace HelpdeskWorker
                                     }
 
                                     k++;
+                                    emailInfo.IdContact = idContact;
                                     dbEmailInfo.Insert(emailInfo);
+
+                                    //foreach (var attachment in message.Attachments)
+                                    //{
+                                    //    using (var stream = File.Create("fileName"))
+                                    //    {
+                                    //        if (attachment is MessagePart)
+                                    //        {
+                                    //            var part = (MessagePart)attachment;
+
+                                    //            part.Message.WriteTo(stream);
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            var part = (MimePart)attachment;
+
+                                    //            part.Content.DecodeTo(stream);
+                                    //        }
+                                    //    }
+                                    //}
 
                                     inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
                                 }

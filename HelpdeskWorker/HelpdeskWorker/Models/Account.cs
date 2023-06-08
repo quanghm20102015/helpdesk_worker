@@ -24,4 +24,8 @@ public partial class Account
     public int Status { get; set; }
 
     public string? IdGuId { get; set; }
+
+    public string? Avatar { get; set; }
+
+    public string? FileName { get; set; }
 }

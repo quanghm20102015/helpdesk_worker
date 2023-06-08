@@ -35,6 +35,8 @@ public partial class HelpDeskSystemContext : DbContext
 
     public virtual DbSet<EmailInfoAssign> EmailInfoAssigns { get; set; }
 
+    public virtual DbSet<EmailInfoAttach> EmailInfoAttachs { get; set; }
+
     public virtual DbSet<EmailInfoFollow> EmailInfoFollows { get; set; }
 
     public virtual DbSet<EmailInfoLabel> EmailInfoLabels { get; set; }
@@ -58,8 +60,10 @@ public partial class HelpDeskSystemContext : DbContext
         modelBuilder.Entity<Account>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Avatar).HasColumnName("avatar");
             entity.Property(e => e.Company).HasColumnName("company");
             entity.Property(e => e.Confirm).HasColumnName("confirm");
+            entity.Property(e => e.FileName).HasColumnName("fileName");
             entity.Property(e => e.Fullname).HasColumnName("fullname");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdGuId).HasColumnName("idGuId");
@@ -131,6 +135,9 @@ public partial class HelpDeskSystemContext : DbContext
         modelBuilder.Entity<Csat>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.DateTime)
+                .HasDefaultValueSql("'-infinity'::timestamp with time zone")
+                .HasColumnName("dateTime");
             entity.Property(e => e.DescriptionFeedBack).HasColumnName("descriptionFeedBack");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdFeedBack).HasColumnName("idFeedBack");
@@ -151,6 +158,7 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.FromName).HasColumnName("fromName");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdConfigEmail).HasColumnName("idConfigEmail");
+            entity.Property(e => e.IdContact).HasColumnName("idContact");
             entity.Property(e => e.IdGuId).HasColumnName("idGuId");
             entity.Property(e => e.IdLabel).HasColumnName("idLabel");
             entity.Property(e => e.IdReference)
@@ -174,6 +182,14 @@ public partial class HelpDeskSystemContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdEmailInfo).HasColumnName("idEmailInfo");
             entity.Property(e => e.IdUser).HasColumnName("idUser");
+        });
+
+        modelBuilder.Entity<EmailInfoAttach>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.FileName).HasColumnName("fileName");
+            entity.Property(e => e.IdEmailInfo).HasColumnName("idEmailInfo");
+            entity.Property(e => e.PathFile).HasColumnName("pathFile");
         });
 
         modelBuilder.Entity<EmailInfoFollow>(entity =>

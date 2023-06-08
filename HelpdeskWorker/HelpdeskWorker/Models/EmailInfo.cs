@@ -52,4 +52,6 @@ public partial class EmailInfo
     public bool Read { get; set; }
 
     public string IdReference { get; set; } = null!;
+
+    public int IdContact { get; set; }
 }

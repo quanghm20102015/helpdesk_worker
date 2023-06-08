@@ -11,13 +11,13 @@ namespace HelpdeskWorker.Data
     public class ContactHelper
     {
         private HelpDeskSystemContext dbContext;
-        public Contact GetByEmail(string Email)
+        public Contact GetByEmail(string Email, int IdCompany)
         {
             using (dbContext = new HelpDeskSystemContext())
             {
                 try
                 {
-                    var result = dbContext.Contacts.Where(x=> x.Email == Email).FirstOrDefault();
+                    var result = dbContext.Contacts.Where(x=> x.Email == Email && x.IdCompany == IdCompany).FirstOrDefault();
                     return result;
                 }
                 catch (Exception)
