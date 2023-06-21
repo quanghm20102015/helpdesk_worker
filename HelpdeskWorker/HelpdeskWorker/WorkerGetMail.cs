@@ -1,4 +1,4 @@
-using MailKit.Net.Imap;
+﻿using MailKit.Net.Imap;
 using MailKit;
 using Microsoft.Extensions.Configuration;
 using HelpdeskWorker.Data;
@@ -139,8 +139,16 @@ namespace HelpdeskWorker
                                     }
                                     else
                                     {
-                                        emailInfo.MainConversation = false;
                                         emailInfo.IdReference = message.References.ToArray()[0].ToString();
+
+                                        if( dbEmailInfo.CheckConversationResolve(emailInfo.IdReference))
+                                        {
+                                            emailInfo.MainConversation = true;
+                                        }
+                                        else
+                                        {
+                                            emailInfo.MainConversation = false;
+                                        }
                                     }
 
                                     int idContact = 0;
