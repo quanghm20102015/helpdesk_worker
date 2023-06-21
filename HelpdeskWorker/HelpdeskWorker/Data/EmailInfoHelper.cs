@@ -25,5 +25,41 @@ namespace HelpdeskWorker.Data
                 }
             }
         }
+
+        public EmailInfo GetEmailInfoByMessageId(string MessageId)
+        {
+            using (dbContext = new HelpDeskSystemContext())
+            {
+                try
+                {
+                    var result = dbContext.EmailInfos.Where(x => x.MessageId == MessageId && x.MainConversation == true).FirstOrDefault();
+                    return result;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+        public bool CheckConversationResolve(string IdReference)
+        {
+            using (dbContext = new HelpDeskSystemContext())
+            {
+                try
+                {
+                    var result = dbContext.EmailInfos.Where(x => x.IdReference == IdReference && x.MainConversation == true).FirstOrDefault();
+                    if(result.Status == 2)
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+        }
     }
 }
