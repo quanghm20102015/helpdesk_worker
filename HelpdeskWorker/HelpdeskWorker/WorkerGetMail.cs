@@ -211,7 +211,7 @@ namespace HelpdeskWorker
                 }
 
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(60000, stoppingToken);
+                await Task.Delay(10000, stoppingToken);
             }
             //List<ConfigMail> listMail = db.GetAllConfigMail();
             //foreach(ConfigMail obj in listMail)
