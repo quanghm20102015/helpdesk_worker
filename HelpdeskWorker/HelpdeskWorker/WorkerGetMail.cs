@@ -21,7 +21,7 @@ namespace HelpdeskWorker
         EmailInfoHelper dbEmailInfo = new EmailInfoHelper();
         AccountHelper dbAccountInfo = new AccountHelper();
         ContactHelper dbContact = new ContactHelper();
-        
+
         public WorkerGetMail(ILogger<WorkerGetMail> logger)
         {
             _logger = logger;
@@ -78,29 +78,31 @@ namespace HelpdeskWorker
                             var inbox = client.Inbox;
                             inbox.Open(FolderAccess.ReadWrite);
 
-                            var results = inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
+                            //var results = inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
+                            var results = inbox.Search(SearchOptions.All, SearchQuery.DeliveredAfter(DateTime.Now.AddMinutes(-5)));
+
 
                             if (results.UniqueIds.Count != 0)
                             {
-                                List<Account> listAccountAll = dbAccountInfo.GetByIdCompany(mail.IdCompany);
+                                //List<Account> listAccountAll = dbAccountInfo.GetByIdCompany(mail.IdCompany);
 
-                                List<Account> listAccountOnline = listAccountAll.FindAll(r => r.Login == true);
+                                //List<Account> listAccountOnline = listAccountAll.FindAll(r => r.Login == true);
 
-                                List<Account> listAccount = new List<Account>();
-                                if (listAccountOnline.Count == 0)
-                                {
-                                    listAccount = listAccountAll;
-                                }
-                                else
-                                {
-                                    listAccount = listAccountOnline;
-                                }
+                                //List<Account> listAccount = new List<Account>();
+                                //if (listAccountOnline.Count == 0)
+                                //{
+                                //    listAccount = listAccountAll;
+                                //}
+                                //else
+                                //{
+                                //    listAccount = listAccountOnline;
+                                //}
 
                                 int k = 0;
                                 int assignIndex = 0;
                                 foreach (var uniqueId in results.UniqueIds)
                                 {
-                                    assignIndex = listAccount.Count == 0 ? 0 : k % listAccount.Count;
+                                    //assignIndex = listAccount.Count == 0 ? 0 : k % listAccount.Count;
                                     EmailInfo emailInfo = new EmailInfo();
 
                                     var message = client.Inbox.GetMessage(uniqueId);
@@ -116,7 +118,13 @@ namespace HelpdeskWorker
 
                                     emailInfo.IdConfigEmail = IdConfigEmail;
                                     emailInfo.MessageId = message.MessageId.ToString();
-                                    
+
+                                    EmailInfo obj = dbEmailInfo.GetEmailInfoByMessageId(emailInfo.MessageId);
+                                    if (obj != null)
+                                    {
+                                        continue;
+                                    }
+
                                     //emailInfo.Date = message.Date.LocalDateTime.ToUniversalTime();
                                     emailInfo.Date = DateTime.Now.ToUniversalTime();
                                     emailInfo.From = message.From.ToString().Split('<')[1].Replace(">", "");
@@ -128,7 +136,8 @@ namespace HelpdeskWorker
                                     emailInfo.TextBody = message.HtmlBody.ToString();
                                     emailInfo.IdCompany = mail.IdCompany;
                                     emailInfo.Status = 1;
-                                    emailInfo.Assign = listAccountOnline[assignIndex].Id;
+                                    //emailInfo.Assign = listAccountOnline[assignIndex].Id;
+                                    emailInfo.Assign = 0;
                                     emailInfo.IdGuId = Guid.NewGuid().ToString();
                                     emailInfo.Type = 1;
                                     emailInfo.Read = false;
@@ -141,7 +150,7 @@ namespace HelpdeskWorker
                                     {
                                         emailInfo.IdReference = message.References.ToArray()[0].ToString();
 
-                                        if( dbEmailInfo.CheckConversationResolve(emailInfo.IdReference))
+                                        if (dbEmailInfo.CheckConversationResolve(emailInfo.IdReference))
                                         {
                                             emailInfo.MainConversation = true;
                                         }
@@ -164,7 +173,7 @@ namespace HelpdeskWorker
                                             dbContact.Insert(contactInsert);
                                             idContact = contactInsert.Id;
                                         }
-                                        else 
+                                        else
                                         {
                                             idContact = contact.Id;
                                         }
@@ -197,6 +206,7 @@ namespace HelpdeskWorker
                                     //}
 
                                     inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
+                                    //inbox.AddFlags(uniqueId, MessageFlags.Deleted, true);
                                 }
 
                             }
@@ -219,7 +229,7 @@ namespace HelpdeskWorker
 
             //}
 
-            
+
         }
 
         //protected override async Task ExecuteAsync(CancellationToken stoppingToken)
