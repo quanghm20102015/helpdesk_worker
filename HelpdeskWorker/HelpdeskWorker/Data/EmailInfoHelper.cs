@@ -32,7 +32,7 @@ namespace HelpdeskWorker.Data
             {
                 try
                 {
-                    var result = dbContext.EmailInfos.Where(x => x.MessageId == MessageId && x.MainConversation == true).FirstOrDefault();
+                    var result = dbContext.EmailInfos.Where(x => x.MessageId == MessageId).FirstOrDefault();
                     return result;
                 }
                 catch (Exception)
